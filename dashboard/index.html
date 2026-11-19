@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="ตัวอย่างผลงานโดย @webiq บน Fastwork">
+<title>บ้านเพลิน Sales Dashboard</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F3F5F8; --panel:#FFFFFF; --ink:#1B2533; --muted:#647083; --line:#E3E7ED;
+  --teal:#0E8C84; --teal-soft:#D5EEEC; --prev:#A9B3C1; --up:#0E7A55; --down:#C0392B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"IBM Plex Sans Thai",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:6px}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+aside{background:#fff;border-right:1px solid var(--line);padding:22px 16px;padding-left:max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:4px}
+.brand{font-weight:600;font-size:18px;padding:4px 10px 22px;display:flex;align-items:center;gap:10px}
+.brand i{width:28px;height:28px;border-radius:8px;background:var(--teal);display:block}
+aside a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500}
+aside a.on{background:var(--teal-soft);color:#0A5F5A}
+aside a svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+aside .foot{margin-top:auto;font-size:13px;color:var(--muted);padding:0 12px}
+main{padding:26px 32px 40px;padding-right:max(32px,env(safe-area-inset-right,0px));min-width:0}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.top h1{font-size:24px;font-weight:600}
+.top p{color:var(--muted)}
+.ctrls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sync{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer}
+.sync svg{width:15px;height:15px;stroke:var(--teal);stroke-width:2;fill:none}
+.sync.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seg{position:relative;display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg .pill{position:absolute;top:3px;bottom:3px;left:0;border-radius:7px;background:var(--ink);transition:transform .4s cubic-bezier(.3,1.2,.4,1),width .4s cubic-bezier(.3,1.2,.4,1)}
+.seg button{position:relative;z-index:1;font-weight:500;border:0;background:none;color:var(--muted);padding:7px 14px;border-radius:7px;cursor:pointer;transition:color .3s}
+.seg button[aria-pressed=true]{color:#fff}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.kpi .l{color:var(--muted);font-size:14px}
+.kpi .v{font-size:28px;font-weight:600;margin:4px 0 2px;letter-spacing:-.3px;white-space:nowrap}
+.kpi .d{font-size:13px;font-weight:500}
+.kpi .d.up{color:var(--up)}.kpi .d.down{color:var(--down)}
+.kpi .d span{color:var(--muted);font-weight:400}
+.kpi svg.spark{display:block;width:100%;height:28px;margin-top:8px}
+
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0}
+.card h2{font-size:16px;font-weight:600}
+.card .h{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.filter{font-size:12px;color:var(--teal);background:var(--teal-soft);border-radius:999px;padding:2px 10px;font-weight:600}
+.filter:empty{display:none}
+#chart{width:100%;height:280px;display:block}
+#chart .grid-l{stroke:var(--line)}
+#chart text{fill:var(--muted);font-size:11px;font-family:inherit}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:13px;padding:6px 10px;border-radius:8px;white-space:nowrap;transform:translate(-50%,-120%);opacity:0;transition:opacity .15s}
+.chart-wrap{position:relative}
+
+.chan{display:grid;gap:6px;margin-top:2px}
+.chan button{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:14px;text-align:left;background:none;border:1px solid transparent;border-radius:10px;padding:8px 10px;cursor:pointer;transition:background .2s,border-color .2s,opacity .3s}
+.chan button:hover{background:#F6F8FA}
+.chan button[aria-pressed=true]{border-color:var(--teal);background:#F2FAF9}
+.chan.filtered button[aria-pressed=false]{opacity:.45}
+.chan .bar{grid-column:1/-1;height:8px;border-radius:4px;background:#EEF1F5;overflow:hidden}
+.chan .bar b{display:block;height:100%;width:0;background:var(--teal);border-radius:4px;transition:width .7s cubic-bezier(.2,.9,.3,1)}
+.chan .pct{color:var(--muted)}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--line)}
+td{padding:11px 0;border-bottom:1px solid var(--line)}
+th.r,td.r{text-align:right}
+td .mini{display:inline-block;height:6px;border-radius:3px;background:var(--teal-soft);vertical-align:middle;margin-right:8px;transition:width .6s ease}
+tr:last-child td{border-bottom:0}
+.prod{display:flex;align-items:center;gap:10px}
+.prod i{width:30px;height:30px;border-radius:8px;background:#EEF1F5;display:grid;place-items:center;font-style:normal;font-size:13px;color:var(--muted);font-weight:600;flex:none}
+.stock{font-size:12px;padding:2px 8px;border-radius:999px;background:#FDECEA;color:var(--down);font-weight:500;margin-left:6px;white-space:nowrap}
+
+.two{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:14px}
+.goal .ring{width:150px;height:150px;margin:8px auto 10px;display:block}
+.goal p{text-align:center;color:var(--muted);font-size:14px}
+.goal b{color:var(--ink)}
+.note{font-size:12px;color:var(--muted);margin-top:18px}
+
+@media (max-width:1000px){
+  .app{grid-template-columns:1fr}
+  aside{display:none}
+  main{padding:18px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:1fr 1fr}
+  .grid,.two{grid-template-columns:1fr}
+  .kpi .v{font-size:21px}
+  #chart{height:220px}
+  .hide-m{display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><i></i>บ้านเพลิน</div>
+  <a class="on" href="#"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>ภาพรวม</a>
+  <a href="#"><svg viewBox="0 0 24 24"><path d="M6 6h15l-2 9H7L5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>ออเดอร์</a>
+  <a href="#"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8"/></svg>สินค้า</a>
+  <a href="#"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 11a3 3 0 100-6M22 21c0-3-2-5-5-5"/></svg>ลูกค้า</a>
+  <a href="#"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>รายงาน</a>
+  <div class="foot">ข้อมูลตัวอย่าง<br>ร้านค้าสมมติ</div>
+</aside>
+<main>
+  <div class="top">
+    <div><h1>ภาพรวมยอดขาย</h1><p id="range"></p></div>
+    <div class="ctrls">
+      <button class="sync" id="sync" title="ดึงข้อมูลล่าสุดจาก Google Sheets"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></svg><span id="syncT">Google Sheets · อัปเดตเมื่อสักครู่</span></button>
+      <div class="seg" role="group" aria-label="เลือกเดือน" id="seg"><span class="pill"></span>
+        <button data-m="0">ก.ย.</button><button data-m="1">ต.ค.</button><button data-m="2">พ.ย.</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="l">ยอดขายรวม</div><div class="v" id="k-sales">–</div><div class="d" id="d-sales"></div><svg class="spark" id="sp-sales" preserveAspectRatio="none"></svg></div>
+    <div class="kpi"><div class="l">จำนวนออเดอร์</div><div class="v" id="k-orders">–</div><div class="d" id="d-orders"></div><svg class="spark" id="sp-orders" preserveAspectRatio="none"></svg></div>
+    <div class="kpi"><div class="l">ยอดเฉลี่ยต่อออเดอร์</div><div class="v" id="k-aov">–</div><div class="d" id="d-aov"></div><svg class="spark" id="sp-aov" preserveAspectRatio="none"></svg></div>
+    <div class="kpi"><div class="l">ลูกค้าใหม่</div><div class="v" id="k-new">–</div><div class="d" id="d-new"></div><svg class="spark" id="sp-new" preserveAspectRatio="none"></svg></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="h"><h2>ยอดขายรายวัน <span class="filter" id="fTag"></span></h2>
+        <div class="legend"><span><i style="background:var(--teal)"></i><span id="lg-cur"></span></span><span><i style="background:var(--prev)"></i><span id="lg-prev"></span></span></div></div>
+      <div class="chart-wrap"><svg id="chart" role="img" aria-label="กราฟยอดขายรายวัน"></svg><div class="tip" id="tip"></div></div>
+    </div>
+    <div class="card">
+      <div class="h"><h2>ช่องทางการขาย</h2></div>
+      <div class="chan" id="chan"></div>
+      <p class="hint">กดที่ช่องทางเพื่อกรองทั้งหน้า</p>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <div class="h"><h2>สินค้าขายดี</h2></div>
+      <table><thead><tr><th>สินค้า</th><th class="r hide-m">ชิ้น</th><th class="r">ยอดขาย</th></tr></thead><tbody id="top"></tbody></table>
+    </div>
+    <div class="card goal">
+      <div class="h"><h2>เป้ายอดขายเดือนนี้</h2></div>
+      <svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="#EEF1F5" stroke-width="12"/><circle id="ring" cx="60" cy="60" r="50" fill="none" stroke="#0E8C84" stroke-width="12" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="314.16" stroke-dashoffset="314.16"/><text id="ring-t" x="60" y="67" text-anchor="middle" font-size="22" font-weight="600" fill="#1B2533" font-family="IBM Plex Sans Thai, sans-serif">0%</text></svg>
+      <p id="goal-t"></p>
+      <p class="note">ข้อมูลในหน้านี้เป็นตัวอย่างสำหรับแสดงผลงาน</p>
+    </div>
+  </div>
+</main>
+</div>
+<script>
+const MONTHS=[
+  {name:'ก.ย.',full:'กันยายน',days:30,base:38000,goal:1400000,newc:412},
+  {name:'ต.ค.',full:'ตุลาคม',days:31,base:41500,goal:1550000,newc:468},
+  {name:'พ.ย.',full:'พฤศจิกายน',days:30,base:46800,goal:1800000,newc:539}];
+const PREV0={name:'ส.ค.',days:31,base:35200,newc:380};
+const CH=['เว็บไซต์','Shopee','LINE OA','หน้าร้าน'];
+function shares(mi){const a=[.41+mi*.02,.29,.18-mi*.01];a.push(1-a[0]-a[1]-a[2]);return a}
+function rng(seed){return()=>{seed=(seed*16807)%2147483647;return seed/2147483647}}
+function series(m,seed){const r=rng(seed);return Array.from({length:31},(_,i)=>{if(i>=m.days)return null;const dow=(i+2)%7,wk=(dow===5||dow===6)?1.28:1,pay=(i>=24||i<=1)?1.18:1;return Math.round(m.base*wk*pay*(0.82+r()*0.36))})}
+const S=[series(PREV0,7),...MONTHS.map((m,i)=>series(m,11+i*13))];
+const PRODUCTS=[['โคมไฟตั้งโต๊ะไม้โอ๊ค',1290],['ผ้าห่มฝ้ายมัสลิน',890],['ชุดแก้วเซรามิก 4 ใบ',650],['พรมทอมือ 120×180',2490],['เทียนหอมกลิ่นตะไคร้',290]];
+const $=id=>document.getElementById(id),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const fmt=n=>Math.round(n).toLocaleString('th-TH'),baht=n=>'฿'+fmt(n);
+const sp=()=>window.__SPEED||1;
+function tween(ms,fn,done){if(reduce){fn(1);done&&done();return}const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)*sp()/ms);fn(1-Math.pow(1-k,3));if(k<1)requestAnimationFrame(f);else done&&done()};requestAnimationFrame(f)}
+const shown={};
+function countTo(id,val,f){const from=shown[id]??0;shown[id]=val;tween(900,k=>$(id).textContent=f(from+(val-from)*k))}
+
+let mi=2,ch=-1,curShown=null,prevShown=null;
+const sum=a=>a.reduce((s,v)=>s+(v||0),0);
+function mult(m){return ch<0?1:shares(m)[ch]}
+function delta(el,cur,prev,label){const p=(cur-prev)/prev*100;el.className='d '+(p>=0?'up':'down');el.innerHTML=(p>=0?'▲ ':'▼ ')+Math.abs(p).toFixed(1)+'% <span>เทียบ '+label+'</span>'}
+function spark(id,arr){const s=$(id),W=200,H=28,v=arr.filter(x=>x!=null),mx=Math.max(...v),mn=Math.min(...v);const p=v.map((y,i)=>`${(i/(v.length-1)*W).toFixed(1)},${(H-3-(y-mn)/(mx-mn||1)*(H-6)).toFixed(1)}`).join(' ');s.setAttribute('viewBox',`0 0 ${W} ${H}`);s.innerHTML=`<polyline points="${p}" fill="none" stroke="#0E8C84" stroke-width="1.6" vector-effect="non-scaling-stroke" opacity=".8"/>`}
+
+const svg=$('chart');let geo;
+function drawChart(cur,prev,max){
+  const W=svg.clientWidth,H=svg.clientHeight,pl=48,pr=10,pt=10,pb=26,n=31;
+  const x=i=>pl+(W-pl-pr)*i/(n-1),y=v=>pt+(H-pt-pb)*(1-v/max);geo={x,y,pl,pr,W,H,pt,pb,n};
+  const pts=a=>a.map((v,i)=>v==null?null:[x(i),y(v)]).filter(Boolean);
+  const smooth=p=>{let d=`M${p[0][0].toFixed(1)} ${p[0][1].toFixed(1)}`;for(let i=1;i<p.length;i++){const [x0,y0]=p[i-1],[x1,y1]=p[i],cx=(x0+x1)/2;d+=` C${cx.toFixed(1)} ${y0.toFixed(1)} ${cx.toFixed(1)} ${y1.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`}return d};
+  const pc=pts(cur),pp=pts(prev);
+  let g='';for(let k=0;k<=4;k++){const v=max*k/4;g+=`<line class="grid-l" x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl-8}" y="${y(v)+4}" text-anchor="end">${v?Math.round(v/1000)+'k':'0'}</text>`}
+  [1,8,15,22,29].forEach(d=>g+=`<text x="${x(d-1)}" y="${H-6}" text-anchor="middle">${d}</text>`);
+  const last=pc[pc.length-1];
+  svg.innerHTML=g+`<defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E8C84" stop-opacity=".2"/><stop offset="1" stop-color="#0E8C84" stop-opacity="0"/></linearGradient></defs>
+  <path d="${smooth(pp)}" fill="none" stroke="#A9B3C1" stroke-width="1.6" stroke-dasharray="4 4"/>
+  <path d="${smooth(pc)} L${last[0]} ${y(0)} L${pc[0][0]} ${y(0)} Z" fill="url(#fill)"/>
+  <path id="line" d="${smooth(pc)}" fill="none" stroke="#0E8C84" stroke-width="2.4"/>
+  <circle cx="${last[0]}" cy="${last[1]}" r="4" fill="#0E8C84"/>
+  <line id="hov" y1="${pt}" y2="${H-pb}" stroke="#1B2533" stroke-opacity=".25" style="display:none"/><circle id="dot" r="5" fill="#fff" stroke="#0E8C84" stroke-width="2.4" style="display:none"/>`;
+}
+function animateChart(cur,prev){
+  const max=Math.ceil(Math.max(...cur.filter(Boolean),...prev.filter(Boolean))/20000)*20000;
+  const fromC=curShown||cur.map(v=>v==null?null:0),fromP=prevShown||prev.map(v=>v==null?null:0),fromMax=geo?.max||max;
+  const lerpA=(a,b,k)=>b.map((v,i)=>v==null?null:(a[i]??(b[i-1]!=null?a[i-1]??v:v))+(v-(a[i]??(a[i-1]??v)))*k);
+  tween(800,k=>{drawChart(lerpA(fromC,cur,k),lerpA(fromP,prev,k),fromMax+(max-fromMax)*k);geo.max=fromMax+(max-fromMax)*k});
+  curShown=cur;prevShown=prev;
+}
+svg.addEventListener('mousemove',e=>{if(!geo||!curShown)return;const r=svg.getBoundingClientRect(),{x,y,pl,pr,W,n}=geo;let i=Math.round((e.clientX-r.left-pl)/(W-pl-pr)*(n-1));const len=curShown.filter(v=>v!=null).length;i=Math.max(0,Math.min(len-1,i));
+  const hov=$('hov'),dot=$('dot'),tip=$('tip');hov.setAttribute('x1',x(i));hov.setAttribute('x2',x(i));hov.style.display='';dot.setAttribute('cx',x(i));dot.setAttribute('cy',y(curShown[i]));dot.style.display='';
+  tip.style.left=x(i)+'px';tip.style.top=y(curShown[i])+'px';tip.style.opacity=1;tip.textContent=`${i+1} ${MONTHS[mi].name} · ${baht(curShown[i])}`});
+svg.addEventListener('mouseleave',()=>{$('tip').style.opacity=0;$('hov')&&($('hov').style.display='none');$('dot')&&($('dot').style.display='none')});
+
+function render(){
+  const m=MONTHS[mi],pm=mi?MONTHS[mi-1]:PREV0,mc=mult(mi),mp=mi?mult(mi-1):(ch<0?1:shares(0)[ch]);
+  const cur=S[mi+1].map(v=>v==null?null:v*mc),prev=S[mi].map(v=>v==null?null:v*mp);
+  const sales=sum(cur),ps=sum(prev),orders=sales/1085,po=ps/1062,nc=m.newc*mc,pnc=pm.newc*mp;
+  $('range').textContent=`1–${m.days} ${m.full} 2569`;
+  countTo('k-sales',sales,baht);delta($('d-sales'),sales,ps,pm.name);
+  countTo('k-orders',orders,fmt);delta($('d-orders'),orders,po,pm.name);
+  countTo('k-aov',sales/orders,baht);delta($('d-aov'),sales/orders,ps/po,pm.name);
+  countTo('k-new',nc,fmt);delta($('d-new'),nc,pnc,pm.name);
+  spark('sp-sales',cur);spark('sp-orders',cur.map((v,i)=>v&&v/(1040+(i%5)*20)));spark('sp-aov',cur.map((v,i)=>v&&1000+((i*37)%90)));spark('sp-new',cur.map((v,i)=>v&&v*(.9+((i*13)%7)/30)));
+  $('lg-cur').textContent=m.name;$('lg-prev').textContent=pm.name;$('fTag').textContent=ch<0?'':CH[ch];
+  animateChart(cur,prev);
+  const sh=shares(mi),tot=sum(S[mi+1]);
+  const box=$('chan');box.classList.toggle('filtered',ch>=0);
+  if(!box.children.length)box.innerHTML=CH.map((n,i)=>`<button data-c="${i}" aria-pressed="false"><span>${n}</span><span><b></b> <span class="pct"></span></span><span class="bar"><b></b></span></button>`).join('');
+  [...box.children].forEach((b,i)=>{b.setAttribute('aria-pressed',i===ch);b.querySelector('span b').textContent=baht(tot*sh[i]);b.querySelector('.pct').textContent=Math.round(sh[i]*100)+'%';const bar=b.querySelector('.bar b');requestAnimationFrame(()=>bar.style.width=sh[i]/sh[0]*100+'%')});
+  const r=rng(99+mi*7);const rows=PRODUCTS.map(([n,p],i)=>{const q=Math.round((180-i*28)*(0.85+r()*.3)*(1+mi*.08)*mc);return{n,q,v:q*p,i}}).sort((a,b)=>b.v-a.v);const topv=rows[0].v;
+  $('top').innerHTML=rows.map((o,k)=>`<tr><td><div class="prod"><i>${k+1}</i>${o.n}${(o.i===3&&mi===2)?'<span class="stock">เหลือ 6 ชิ้น</span>':''}</div></td><td class="r hide-m">${fmt(o.q)}</td><td class="r"><span class="mini hide-m" style="width:${Math.round(o.v/topv*60)}px"></span>${baht(o.v)}</td></tr>`).join('');
+  if(!reduce)[...$('top').children].forEach((tr,i)=>tr.animate([{opacity:0,transform:'translateX(-8px)'},{opacity:1,transform:'none'}],{duration:380,delay:i*60,easing:'ease-out',fill:'backwards'}));
+  const goal=m.goal*mc,pct=Math.min(1,sales/goal),fromPct=shown.pct??0;shown.pct=pct;
+  tween(1000,k=>{const p=fromPct+(pct-fromPct)*k;$('ring').setAttribute('stroke-dashoffset',314.16*(1-p));$('ring-t').textContent=Math.round(p*100)+'%'});
+  $('goal-t').innerHTML=`ทำได้ <b>${baht(sales)}</b> จากเป้า ${baht(goal)}`;
+  const seg=$('seg');seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m==mi));moveSeg();
+}
+function moveSeg(){const seg=$('seg'),b=seg.querySelector(`[data-m="${mi}"]`),p=seg.querySelector('.pill');p.style.width=b.offsetWidth+'px';p.style.transform=`translateX(${b.offsetLeft-3}px)`}
+$('seg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b&&+b.dataset.m!==mi){mi=+b.dataset.m;render()}});
+$('chan').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;const c=+b.dataset.c;ch=ch===c?-1:c;render()});
+let synced=Date.now();
+$('sync').onclick=()=>{const s=$('sync');s.classList.add('spin');$('syncT').textContent='กำลังดึงข้อมูล…';setTimeout(()=>{s.classList.remove('spin');synced=Date.now();$('syncT').textContent='Google Sheets · อัปเดตเมื่อสักครู่';curShown=curShown.map(v=>v&&v*.97);render()},900/sp())};
+setInterval(()=>{const m=Math.round((Date.now()-synced)/60000);if(m>0)$('syncT').textContent=`Google Sheets · อัปเดต ${m} นาทีที่แล้ว`},30000);
+render();document.fonts&&document.fonts.ready.then(moveSeg);
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{moveSeg();curShown&&drawChart(curShown,prevShown,geo.max)},150)});
+</script>
+
+</body>
+</html>

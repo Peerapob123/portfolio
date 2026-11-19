@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="ตัวอย่างผลงานโดย @webiq บน Fastwork">
+<title>นิ่ม หมอนเพื่อสุขภาพ</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Trirong:wght@500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<style>
+:root{
+  --dusk:#5B5596; --dusk-deep:#2E2A55; --lav:#ECEAF6; --sky:#E4E8EF; --paper:#FAFAFC;
+  --ink:#24223A; --muted:#625F78; --line:#DCDBE6; --sun:#F4C79A; --ok:#2F7D5B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"IBM Plex Sans Thai",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:17px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--dusk);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+
+header{position:fixed;top:0;left:0;right:0;z-index:20;padding-top:env(safe-area-inset-top,0px);transition:background .35s,box-shadow .35s}
+header.scrolled{background:rgba(250,250,252,.82);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:16px;height:76px;transition:height .35s}
+header.scrolled nav{height:62px}
+.logo{font-family:Trirong,serif;font-weight:600;font-size:28px;text-decoration:none;color:var(--dusk-deep)}
+nav ul{display:flex;gap:30px;list-style:none;font-size:16px}
+nav ul a{text-decoration:none;color:var(--muted)}
+.cart-btn{position:relative;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer}
+.cart-btn svg{width:22px;height:22px;stroke:var(--dusk-deep);stroke-width:1.8;fill:none}
+.cart-btn b{position:absolute;top:-7px;right:-7px;min-width:22px;height:22px;border-radius:999px;background:var(--dusk);color:#fff;font-size:12px;display:grid;place-items:center;padding:0 6px}
+.cart-btn b:empty{display:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:12px;font-weight:600;text-decoration:none;font-size:16px;border:0;cursor:pointer;transition:background .2s,transform .15s}
+.btn:active{transform:scale(.97)}
+.btn-d{background:var(--dusk-deep);color:#fff}
+.btn-d:hover{background:var(--dusk)}
+.btn-l{background:#fff;color:var(--dusk-deep);border:1px solid var(--line)}
+
+.hero{background:linear-gradient(180deg,#D9D6EE 0%,#E7E4F3 45%,#F3EEF1 78%,var(--paper) 100%);padding:150px 0 90px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.hero h1{font-family:Trirong,serif;font-weight:500;font-size:clamp(40px,5.2vw,66px);line-height:1.28;color:var(--dusk-deep);text-wrap:balance}
+.hero p{margin:22px 0 28px;color:var(--muted);font-size:19px;max-width:28em}
+.picker{display:inline-flex;gap:4px;padding:5px;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:14px;margin-bottom:18px;position:relative}
+.picker .pill{position:absolute;top:5px;bottom:5px;left:0;border-radius:10px;background:var(--dusk-deep);transition:transform .45s cubic-bezier(.3,1.2,.4,1),width .45s cubic-bezier(.3,1.2,.4,1)}
+.picker button{position:relative;z-index:1;border:0;background:none;padding:8px 16px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:500;transition:color .3s}
+.picker button[aria-pressed=true]{color:#fff}
+.buy{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.buy .price{font-family:Trirong,serif;font-size:34px;font-weight:600;color:var(--dusk-deep);min-width:4.2em}
+.buy .price s{font-size:17px;color:var(--muted);margin-left:6px;font-weight:500}
+.trust{margin-top:30px;display:flex;gap:28px;color:var(--muted);font-size:15px;flex-wrap:wrap}
+.trust b{color:var(--ink);font-weight:600}
+
+.scene{position:relative;height:420px;display:grid;place-items:center}
+.moon{position:absolute;top:10px;right:60px;width:86px;height:86px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFF6E8,var(--sun));box-shadow:0 0 60px 10px rgba(244,199,154,.45)}
+.pillow-wrap{transition:transform .7s cubic-bezier(.3,1.3,.4,1);width:min(440px,90%);display:grid;place-items:center}
+.pillow{position:relative;width:100%;aspect-ratio:1.75;animation:settle 1.6s cubic-bezier(.2,.7,.2,1) both}
+.pillow .body{position:absolute;inset:0;border-radius:44% 44% 40% 40% / 48% 48% 44% 44%;background:radial-gradient(120% 90% at 40% 30%,#FFFFFF 0%,#F4F2FA 45%,#DCD8EC 100%);box-shadow:inset -18px -24px 40px rgba(91,85,150,.18),inset 14px 16px 30px rgba(255,255,255,.9),0 40px 50px -30px rgba(46,42,85,.45)}
+.pillow .curve{position:absolute;left:16%;right:16%;top:46%;height:22%;border-radius:50%;border-top:2px solid rgba(91,85,150,.18)}
+.pillow .seam{position:absolute;inset:7%;border:1.5px dashed rgba(91,85,150,.22);border-radius:42% 42% 38% 38% / 46% 46% 42% 42%}
+.pillow .label{position:absolute;right:12%;bottom:16%;background:var(--dusk);color:#fff;font-family:Trirong,serif;font-size:14px;padding:3px 10px;border-radius:4px}
+.dim-tag{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--muted);background:rgba(255,255,255,.75);padding:4px 12px;border-radius:999px;white-space:nowrap}
+.shadow{position:absolute;bottom:70px;width:min(380px,78%);height:26px;border-radius:50%;background:radial-gradient(rgba(46,42,85,.25),transparent 70%);animation:shadow 1.6s cubic-bezier(.2,.7,.2,1) both;transition:transform .7s cubic-bezier(.3,1.3,.4,1)}
+@keyframes settle{0%{transform:translateY(-40px) scale(.98,1.02);opacity:0}60%{transform:translateY(6px) scale(1.03,.96);opacity:1}100%{transform:none}}
+@keyframes shadow{0%{opacity:0;transform:scale(.7)}}
+@keyframes squish{30%{transform:scale(1.06,.92)}65%{transform:scale(.98,1.03)}}
+
+section{padding:96px 0}
+h2{font-family:Trirong,serif;font-weight:500;font-size:clamp(30px,3.6vw,44px);line-height:1.3;color:var(--dusk-deep);text-wrap:balance}
+.intro{color:var(--muted);max-width:36em;margin-top:14px}
+
+.layers{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center}
+.stack{display:grid;gap:10px}
+.layer{border-radius:16px;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.layer:nth-child(1){background:#fff;border:1px solid var(--line)}
+.layer:nth-child(2){background:var(--lav);margin:0 18px}
+.layer:nth-child(3){background:#D7D3EC;margin:0 36px}
+.layer h3{font-size:18px;font-weight:600}
+.layer p{font-size:15px;color:var(--muted)}
+.layer span{font-family:Trirong,serif;font-size:15px;color:var(--dusk);white-space:nowrap}
+.points{list-style:none;display:grid;gap:22px;margin-top:28px}
+.points li h3{font-size:18px;font-weight:600}
+.points li p{color:var(--muted);font-size:16px}
+
+.sizes{background:var(--sky)}
+.size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.size{background:#fff;border-radius:20px;padding:28px;display:flex;flex-direction:column;border:2px solid transparent;transition:transform .3s,box-shadow .3s}
+.size:hover{transform:translateY(-4px);box-shadow:0 24px 40px -28px rgba(46,42,85,.5)}
+.size.pick{border-color:var(--dusk)}
+.size .shape{height:70px;display:flex;align-items:flex-end;margin-bottom:22px}
+.size .shape i{display:block;background:var(--lav);border:1.5px solid #CFCAE6;border-radius:40%/50%}
+.size h3{font-size:20px;font-weight:600}
+.size .dim{color:var(--muted);font-size:15px}
+.size .price{font-family:Trirong,serif;font-size:34px;font-weight:600;color:var(--dusk-deep);margin:16px 0 4px}
+.size .price s{font-size:17px;color:var(--muted);font-weight:500;margin-left:6px}
+.size ul{list-style:none;color:var(--muted);font-size:15px;margin:14px 0 24px;display:grid;gap:6px;flex:1}
+.size ul li::before{content:"✓";color:var(--dusk);margin-right:8px;font-weight:600}
+.badge{align-self:flex-start;background:var(--dusk);color:#fff;font-size:13px;font-weight:500;padding:3px 12px;border-radius:999px;margin-bottom:10px}
+
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px}
+.quote p{font-family:Trirong,serif;font-size:19px;line-height:1.65}
+.quote span{display:block;margin-top:12px;color:var(--muted);font-size:14px}
+
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px}
+details{border-bottom:1px solid var(--line);overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;font-weight:600;font-size:18px;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";position:absolute;right:6px;top:50%;width:12px;height:12px;border-right:2px solid var(--dusk);border-bottom:2px solid var(--dusk);transform:translateY(-70%) rotate(45deg);transition:transform .3s}
+details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+details p{padding:0 0 22px;color:var(--muted);max-width:36em}
+
+.closing{background:var(--dusk-deep);color:#fff;text-align:center;padding:88px 0}
+.closing h2{color:#fff}
+.closing p{color:rgba(255,255,255,.75);margin:14px auto 30px;max-width:30em}
+.closing .btn{background:var(--sun);color:var(--dusk-deep)}
+footer{padding-block:24px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* cart drawer */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(36,34,58,.35);opacity:0;pointer-events:none;transition:opacity .35s}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:41;width:min(420px,100%);background:#fff;transform:translateX(105%);transition:transform .5s cubic-bezier(.2,1,.3,1);display:flex;flex-direction:column;padding:calc(22px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) 24px;box-shadow:-30px 0 60px -30px rgba(36,34,58,.4)}
+.open .scrim{opacity:1;pointer-events:auto}.open .drawer{transform:none}
+.drawer h3{font-family:Trirong,serif;font-size:26px;font-weight:500;color:var(--dusk-deep);display:flex;justify-content:space-between;align-items:center}
+.drawer .x{border:0;background:none;font-size:26px;line-height:1;cursor:pointer;color:var(--muted);width:40px;height:40px}
+.deal{margin:16px 0 8px;padding:14px 16px;border-radius:14px;background:var(--lav);font-size:14px}
+.deal .bar{height:8px;border-radius:999px;background:#fff;margin-top:8px;overflow:hidden}
+.deal .bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--dusk);transition:width .6s cubic-bezier(.2,.9,.3,1)}
+.deal.done{background:#E2F2EA;color:var(--ok)}.deal.done .bar i{background:var(--ok)}
+.lines{flex:1;overflow:auto;margin:8px 0;display:grid;align-content:start;gap:4px}
+.line{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line .th{width:56px;height:40px;border-radius:40%/50%;background:var(--lav);border:1.5px solid #CFCAE6}
+.line h4{font-size:16px;font-weight:600}
+.line small{color:var(--muted);font-size:13px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;margin-top:4px}
+.qty button{border:0;background:none;width:32px;height:30px;cursor:pointer;font-size:18px;color:var(--dusk-deep)}
+.qty span{min-width:22px;text-align:center;font-weight:600;font-size:15px}
+.line .amt{font-weight:600}
+.empty{color:var(--muted);text-align:center;padding:40px 0}
+.tot{display:grid;gap:6px;padding-top:12px;font-size:15px}
+.tot div{display:flex;justify-content:space-between}
+.tot .disc{color:var(--ok)}
+.tot .grand{font-family:Trirong,serif;font-size:26px;font-weight:600;color:var(--dusk-deep)}
+.drawer .btn{width:100%;margin-top:14px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:50;background:var(--dusk-deep);color:#fff;padding:12px 20px;border-radius:12px;font-size:15px;transition:transform .45s cubic-bezier(.2,1.1,.3,1)}
+.toast.show{transform:translate(-50%,0)}
+.bump{animation:bump .4s ease}
+@keyframes bump{40%{transform:scale(1.25)}}
+
+@media (max-width:900px){
+  .wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  nav ul{display:none}
+  .hero{padding:104px 0 56px}
+  .hero-grid,.layers,.faq-grid{grid-template-columns:1fr}
+  .scene{height:300px;order:-1}
+  .moon{width:60px;height:60px;right:20px}
+  .shadow{bottom:46px}
+  .dim-tag{bottom:10px}
+  .size-grid,.quotes{grid-template-columns:1fr}
+  section{padding:64px 0}
+  .layers,.faq-grid{gap:36px}
+  .layer:nth-child(2){margin:0 10px}.layer:nth-child(3){margin:0 20px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header id="hdr"><div class="wrap"><nav>
+  <a class="logo" href="#top">นิ่ม</a>
+  <ul><li><a href="#why">ทำไมต้องนิ่ม</a></li><li><a href="#sizes">ขนาดและราคา</a></li><li><a href="#faq">คำถามที่พบบ่อย</a></li></ul>
+  <button class="cart-btn" id="cartBtn" aria-label="ตะกร้าสินค้า"><svg viewBox="0 0 24 24"><path d="M5 7h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><b id="count"></b></button>
+</nav></div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap hero-grid">
+  <div>
+    <h1>ตื่นมาโดยไม่ปวดคอ<br>ตั้งแต่คืนแรก</h1>
+    <p>หมอนเมมโมรี่โฟมที่รับรูปคอพอดี ไม่แบนลงเมื่อใช้ไปนาน ทดลองนอนได้ 30 คืน ไม่ถูกใจคืนเงินเต็มจำนวน</p>
+    <div class="picker" id="picker" role="group" aria-label="เลือกขนาด"><span class="pill"></span></div>
+    <div class="buy"><div class="price" id="heroPrice"></div><button class="btn btn-d" id="heroAdd">ใส่ตะกร้า</button></div>
+    <div class="trust"><span><b>30 คืน</b> ทดลองนอนฟรี</span><span><b>ส่งฟรี</b> ทั่วประเทศ</span><span><b>รับประกัน</b> 3 ปี</span></div>
+  </div>
+  <div class="scene" aria-hidden="true">
+    <div class="moon"></div>
+    <div class="pillow-wrap" id="pw"><div class="pillow" id="pillow"><div class="body"></div><div class="seam"></div><div class="curve"></div><div class="label">นิ่ม</div></div></div>
+    <div class="shadow" id="shadow"></div>
+    <div class="dim-tag" id="dimTag"></div>
+  </div>
+</div></section>
+
+<section id="why"><div class="wrap layers">
+  <div>
+    <h2>สามชั้นที่ออกแบบมาให้คอ</h2>
+    <p class="intro">เราทดสอบกับคนนอนตะแคง นอนหงาย และนอนคว่ำ กว่า 200 คน ก่อนได้สูตรที่ลงตัว</p>
+    <ul class="points">
+      <li><h3>ไม่ร้อนตอนกลางคืน</h3><p>เนื้อโฟมมีรูระบายอากาศ ปลอกผ้าเย็นจากเส้นใยไผ่</p></li>
+      <li><h3>ซักปลอกได้ด้วยเครื่อง</h3><p>ซิปซ่อนรอบด้าน ถอดใส่เครื่องซักผ้าได้เลย</p></li>
+      <li><h3>ปรับความสูงได้เอง</h3><p>ถอดแผ่นรองชั้นล่างออก ถ้าชอบหมอนเตี้ย</p></li>
+    </ul>
+  </div>
+  <div class="stack" aria-label="โครงสร้างหมอน 3 ชั้น">
+    <div class="layer"><div><h3>ปลอกผ้าไผ่เย็น</h3><p>นุ่ม ลื่น ระบายความร้อน</p></div><span>ชั้นบน</span></div>
+    <div class="layer"><div><h3>เมมโมรี่โฟมแบบเจล</h3><p>รับรูปคอ คืนตัวใน 3 วินาที</p></div><span>ชั้นกลาง</span></div>
+    <div class="layer"><div><h3>แผ่นรองปรับระดับ</h3><p>หนา 2 ซม. ถอดออกได้</p></div><span>ชั้นล่าง</span></div>
+  </div>
+</div></section>
+
+<section class="sizes" id="sizes"><div class="wrap">
+  <h2>เลือกขนาดที่ใช่</h2>
+  <p class="intro">ซื้อ 2 ใบขึ้นไปลดเพิ่ม 10% ทุกขนาดได้ปลอกสำรอง 1 ใบ และทดลองนอน 30 คืน</p>
+  <div class="size-grid" id="sizeGrid"></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>เสียงจากคนที่นอนแล้ว</h2>
+  <div class="quotes">
+    <div class="quote"><p>“นอนตะแคงมาทั้งชีวิต เพิ่งเจอหมอนที่ไหล่ไม่ชาตอนเช้า”</p><span>ตัวอย่างรีวิว</span></div>
+    <div class="quote"><p>“ถอดแผ่นล่างออกแล้วความสูงพอดีมาก ชอบที่ปรับเองได้”</p><span>ตัวอย่างรีวิว</span></div>
+    <div class="quote"><p>“ซื้อให้พ่อแม่ไปคนละใบ ตอนนี้กลับมาซื้อเพิ่มให้ตัวเอง”</p><span>ตัวอย่างรีวิว</span></div>
+  </div>
+</div></section>
+
+<section id="faq"><div class="wrap faq-grid">
+  <div><h2>คำถามที่พบบ่อย</h2><p class="intro">ถามเพิ่มเติมทาง LINE @nimpillow ตอบภายใน 1 ชั่วโมงในเวลาทำการ</p></div>
+  <div id="faqList">
+    <details open><summary>ทดลองนอน 30 คืน คืนสินค้ายังไง</summary><p>แจ้งทาง LINE ภายใน 30 วันหลังได้รับของ เราส่งคนไปรับหมอนถึงบ้าน และโอนเงินคืนภายใน 7 วันทำการ ไม่ต้องใส่กล่องเดิม</p></details>
+    <details><summary>นอนคว่ำใช้ได้ไหม</summary><p>ได้ แนะนำให้ถอดแผ่นรองชั้นล่างออก หมอนจะเตี้ยลง 2 ซม. คอไม่แหงน</p></details>
+    <details><summary>มีกลิ่นโฟมตอนแกะกล่องไหม</summary><p>อาจมีกลิ่นอ่อน ๆ ในวันแรก วางไว้ในที่อากาศถ่ายเท 2–3 ชั่วโมงก็หาย</p></details>
+    <details><summary>ส่งกี่วัน</summary><p>กรุงเทพฯ และปริมณฑล 1–2 วัน ต่างจังหวัด 2–4 วัน ส่งฟรีทุกออเดอร์</p></details>
+  </div>
+</div></section>
+
+<section class="closing"><div class="wrap">
+  <h2>คืนนี้ลองนอนให้เต็มอิ่ม</h2>
+  <p>ไม่ถูกใจใน 30 คืน คืนเงินเต็มจำนวน ไม่มีคำถาม</p>
+  <a class="btn" href="#sizes">เลือกขนาดหมอน</a>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© 2026 นิ่ม</span><span>ตัวอย่างผลงานออกแบบเว็บไซต์ · แบรนด์สมมติ</span></div></footer>
+
+<div id="cartUI">
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="ตะกร้าสินค้า">
+    <h3>ตะกร้าของคุณ <button class="x" id="closeCart" aria-label="ปิดตะกร้า">×</button></h3>
+    <div class="deal" id="deal"><span id="dealT"></span><div class="bar"><i id="dealBar"></i></div></div>
+    <div class="lines" id="lines"></div>
+    <div class="tot">
+      <div><span>ราคาสินค้า</span><span id="sub"></span></div>
+      <div class="disc"><span>ส่วนลดซื้อคู่ 10%</span><span id="disc"></span></div>
+      <div><span>ค่าส่ง</span><span>ฟรี</span></div>
+      <div class="grand"><span>รวม</span><span id="grand"></span></div>
+    </div>
+    <button class="btn btn-d" id="checkout">ไปหน้าชำระเงิน</button>
+  </aside>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SIZES=[
+  {id:'mini',name:'นิ่ม มินิ',short:'มินิ',dim:'40 × 30 ซม.',use:'สำหรับเด็กและการเดินทาง',price:890,scale:.62,w:90,h:40,perks:['พกขึ้นเครื่องได้','มีถุงผ้าเก็บ']},
+  {id:'std',name:'นิ่ม สแตนดาร์ด',short:'สแตนดาร์ด',dim:'60 × 40 ซม.',use:'เหมาะกับคนส่วนใหญ่',price:1590,was:1990,scale:.86,w:140,h:52,pick:true,perks:['ปรับความสูงได้ 2 ระดับ','ปลอกผ้าไผ่เย็น','รับประกัน 3 ปี']},
+  {id:'king',name:'นิ่ม คิง',short:'คิง',dim:'75 × 45 ซม.',use:'สำหรับคนนอนดิ้น',price:1990,scale:1,w:180,h:58,perks:['ปรับความสูงได้ 2 ระดับ','ขอบรองไหล่กว้างขึ้น','รับประกัน 3 ปี']}
+];
+const $=id=>document.getElementById(id),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const baht=n=>'฿'+Math.round(n).toLocaleString('th-TH');
+const cart=new Map();let sel='std';
+
+/* hero size picker */
+const picker=$('picker'),ppill=picker.querySelector('.pill');
+SIZES.forEach(s=>{const b=document.createElement('button');b.textContent=s.short;b.dataset.id=s.id;b.onclick=()=>pick(s.id);picker.appendChild(b)});
+function movePill(){const b=picker.querySelector(`[data-id="${sel}"]`);ppill.style.width=b.offsetWidth+'px';ppill.style.transform=`translateX(${b.offsetLeft}px)`}
+function pick(id,first){
+  sel=id;const s=SIZES.find(x=>x.id===id);
+  picker.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));movePill();
+  $('pw').style.transform=`scale(${s.scale})`;$('shadow').style.transform=`scaleX(${s.scale})`;
+  $('heroPrice').innerHTML=baht(s.price)+(s.was?`<s>${baht(s.was)}</s>`:'');$('dimTag').textContent=`${s.short} · ${s.dim}`;
+  if(!first&&!reduce){$('pillow').animate([{transform:'scale(1)'},{transform:'scale(1.06,.92)',offset:.3},{transform:'scale(.98,1.03)',offset:.65},{transform:'scale(1)'}],{duration:650,easing:'ease-out'});
+    $('heroPrice').animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'})}
+}
+pick('std',true);requestAnimationFrame(movePill);document.fonts&&document.fonts.ready.then(movePill);addEventListener('resize',movePill);
+$('heroAdd').onclick=e=>add(sel,e.currentTarget);
+
+/* size cards */
+$('sizeGrid').innerHTML=SIZES.map(s=>`<div class="size${s.pick?' pick':''}">${s.pick?'<span class="badge">คนเลือกมากที่สุด</span>':''}
+  <div class="shape"><i style="width:${s.w}px;height:${s.h}px"></i></div><h3>${s.name}</h3><div class="dim">${s.dim} · ${s.use}</div>
+  <div class="price">${baht(s.price)}${s.was?`<s>${baht(s.was)}</s>`:''}</div><ul>${s.perks.map(p=>`<li>${p}</li>`).join('')}</ul>
+  <button class="btn ${s.pick?'btn-d':'btn-l'}" data-add="${s.id}">ใส่ตะกร้า</button></div>`).join('');
+$('sizeGrid').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)add(b.dataset.add,b)});
+
+/* cart */
+function add(id,from){
+  cart.set(id,(cart.get(id)||0)+1);renderCart();
+  const c=$('count');c.classList.remove('bump');void c.offsetWidth;c.classList.add('bump');
+  if(from&&!reduce){const r=from.getBoundingClientRect(),t=$('cartBtn').getBoundingClientRect(),dot=document.createElement('div');
+    dot.style.cssText=`position:fixed;z-index:60;left:${r.left+r.width/2-14}px;top:${r.top+r.height/2-10}px;width:28px;height:20px;border-radius:40%/50%;background:#ECEAF6;border:1.5px solid #5B5596;pointer-events:none`;
+    document.body.appendChild(dot);const dx=t.left+t.width/2-(r.left+r.width/2),dy=t.top+t.height/2-(r.top+r.height/2);
+    dot.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx*.5}px,${dy*.5-80}px) scale(1.2)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(.4)`,opacity:.6}],{duration:700,easing:'cubic-bezier(.5,0,.6,1)'}).onfinish=()=>dot.remove()}
+  toast(`เพิ่ม ${SIZES.find(s=>s.id===id).name} แล้ว`);
+}
+function renderCart(){
+  let qty=0,sub=0;cart.forEach((q,id)=>{qty+=q;sub+=q*SIZES.find(s=>s.id===id).price});
+  $('count').textContent=qty||'';
+  $('lines').innerHTML=qty?[...cart].map(([id,q])=>{const s=SIZES.find(x=>x.id===id);return `<div class="line"><div class="th"></div><div><h4>${s.name}</h4><small>${s.dim}</small><br><span class="qty"><button data-q="${id}" data-d="-1" aria-label="ลด">−</button><span>${q}</span><button data-q="${id}" data-d="1" aria-label="เพิ่ม">+</button></span></div><div class="amt">${baht(s.price*q)}</div></div>`}).join(''):'<p class="empty">ยังไม่มีสินค้าในตะกร้า</p>';
+  const disc=qty>=2?sub*.1:0;$('sub').textContent=baht(sub);$('disc').textContent=disc?'−'+baht(disc):'฿0';$('grand').textContent=baht(sub-disc);
+  const done=qty>=2;$('deal').classList.toggle('done',done);$('dealT').textContent=done?'ได้ส่วนลดซื้อคู่ 10% แล้ว':`เพิ่มอีก ${2-qty} ใบ รับส่วนลด 10%`;$('dealBar').style.width=Math.min(100,qty/2*100)+'%';
+}
+$('lines').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;const id=b.dataset.q,q=(cart.get(id)||0)+ +b.dataset.d;q>0?cart.set(id,q):cart.delete(id);renderCart()});
+const ui=$('cartUI');const openCart=()=>ui.classList.add('open'),closeCart=()=>ui.classList.remove('open');
+$('cartBtn').onclick=openCart;$('closeCart').onclick=closeCart;$('scrim').onclick=closeCart;
+addEventListener('keydown',e=>{if(e.key==='Escape')closeCart()});
+$('checkout').onclick=()=>toast('หน้าชำระเงินเชื่อมกับ PromptPay / บัตร ตามระบบที่ร้านใช้');
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800/(window.__SPEED||1))}
+renderCart();
+
+/* smooth FAQ */
+document.querySelectorAll('#faqList details').forEach(d=>{const s=d.querySelector('summary');s.addEventListener('click',e=>{if(reduce)return;e.preventDefault();
+  const start=d.offsetHeight;if(d.open){const end=s.offsetHeight;d.animate([{height:start+'px'},{height:end+'px'}],{duration:320,easing:'ease'}).onfinish=()=>d.open=false}
+  else{d.open=true;const end=d.offsetHeight;d.animate([{height:start+'px'},{height:end+'px'}],{duration:380,easing:'cubic-bezier(.2,.8,.2,1)'})}})});
+
+/* header + anchors */
+const hdr=$('hdr');addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>20),{passive:true});
+function tweenScroll(to,ms=900){if(reduce){scrollTo(0,to);return}const s=scrollY,t0=performance.now(),sp=window.__SPEED||1;
+  const f=t=>{const k=Math.min(1,(t-t0)*sp/ms),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,s+(to-s)*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1);const el=document.getElementById(id);if(!el)return;e.preventDefault();tweenScroll(id==='top'?0:el.getBoundingClientRect().top+scrollY-60)});
+window.__tweenScroll=tweenScroll;
+</script>
+
+</body>
+</html>

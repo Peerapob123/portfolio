@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="ตัวอย่างผลงานโดย @webiq บน Fastwork">
+<title>ซอยสาม คอฟฟี่บาร์</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500&family=Anuphan:wght@400;500;600&display=swap">
+<style>
+:root{
+  --cobalt:#1D3FA8; --cobalt-deep:#142C78; --milk:#F5F6F2; --toast:#F2B33D;
+  --ink:#1A1F2E; --muted:#5B6275; --line:#D9DCE3; --open:#1E8E5A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Anuphan,system-ui,sans-serif;background:var(--milk);color:var(--ink);line-height:1.65;font-size:17px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--toast);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--milk)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(245,246,242,.86);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s}
+header.scrolled{border-color:var(--line);box-shadow:0 6px 24px -18px rgba(20,44,120,.4)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:16px;height:72px;transition:height .3s}
+header.scrolled nav{height:60px}
+.logo{font-family:Mitr,sans-serif;font-weight:500;font-size:22px;color:var(--cobalt);text-decoration:none;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.logo i{width:30px;height:30px;border-radius:50%;background:var(--cobalt);display:grid;place-items:center;color:var(--toast);font-style:normal;font-size:15px}
+nav ul{display:flex;gap:28px;list-style:none;font-weight:500}
+nav ul a{text-decoration:none;color:var(--muted);transition:color .2s}
+nav ul a:hover{color:var(--cobalt)}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:6px 12px;border-radius:999px;background:#E3F3EA;color:var(--open);white-space:nowrap}
+.status i{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 0 currentColor;animation:pulse 2s infinite}
+.status.closed{background:#F4E6E3;color:#A23B2A}.status.closed i{animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,142,90,.5)}70%{box-shadow:0 0 0 8px rgba(30,142,90,0)}100%{box-shadow:0 0 0 0 rgba(30,142,90,0)}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:600;text-decoration:none;font-size:16px;border:0;cursor:pointer;transition:transform .15s,background .2s}
+.btn:active{transform:scale(.97)}
+.btn-y{background:var(--toast);color:var(--ink)}
+.btn-y:hover{background:#e8a52a}
+.btn-o{border:1.5px solid currentColor;background:none}
+
+.hero{padding:56px 0 76px}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center}
+.hero h1{font-family:Mitr,sans-serif;font-weight:500;font-size:clamp(40px,5.4vw,68px);line-height:1.15;color:var(--cobalt-deep);letter-spacing:-.5px;text-wrap:balance}
+.hero p.lead{margin:22px 0 32px;color:var(--muted);font-size:19px;max-width:30em}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero .cta .btn-o{color:var(--cobalt)}
+.facts{display:flex;gap:32px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap}
+.facts b{display:block;font-family:Mitr,sans-serif;font-weight:500;font-size:22px}
+.facts span{font-size:14px;color:var(--muted)}
+
+.board{background:var(--cobalt);color:#fff;border-radius:18px;padding:34px 36px 30px;position:relative;box-shadow:0 30px 60px -25px rgba(20,44,120,.55);overflow:hidden}
+.board::before{content:"";position:absolute;inset:12px;border:1.5px solid rgba(255,255,255,.28);border-radius:10px;pointer-events:none}
+.board h2{font-family:Mitr,sans-serif;font-weight:500;font-size:28px;text-align:center;letter-spacing:1px}
+.board .sub{text-align:center;color:var(--toast);font-size:14px;margin:2px 0 22px}
+.board ul{list-style:none}
+.board li{display:flex;align-items:baseline;gap:10px;padding:9px 0;font-family:Mitr,sans-serif;font-size:19px;animation:flip .5s ease both}
+.board li .dots{flex:1;border-bottom:2px dotted rgba(255,255,255,.35);transform:translateY(-5px)}
+.board li .p{color:var(--toast);font-weight:500;min-width:2.5em;text-align:right}
+.board li small{display:block;font-family:Anuphan,sans-serif;font-size:13px;color:rgba(255,255,255,.7)}
+.board .note{margin-top:18px;text-align:center;font-size:13px;color:rgba(255,255,255,.75)}
+@keyframes flip{from{opacity:0;transform:translateY(6px)}}
+.board li:nth-child(1){animation-delay:.15s}.board li:nth-child(2){animation-delay:.3s}.board li:nth-child(3){animation-delay:.45s}
+.board li:nth-child(4){animation-delay:.6s}.board li:nth-child(5){animation-delay:.75s}.board li:nth-child(6){animation-delay:.9s}
+
+section{padding:88px 0}
+h2.sec{font-family:Mitr,sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,42px);line-height:1.2;color:var(--cobalt-deep)}
+.sec-intro{color:var(--muted);max-width:34em;margin-top:12px}
+
+.menu{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tabs{position:relative;display:inline-flex;gap:4px;margin:32px 0 28px;padding:5px;border-radius:999px;background:#EEF0F5}
+.tabs .pill{position:absolute;top:5px;bottom:5px;left:0;border-radius:999px;background:var(--cobalt);box-shadow:0 6px 16px -8px rgba(20,44,120,.7);transition:transform .45s cubic-bezier(.3,1.2,.4,1),width .45s cubic-bezier(.3,1.2,.4,1)}
+.tabs button{position:relative;z-index:1;font-weight:500;border:0;background:none;color:var(--muted);padding:9px 20px;border-radius:999px;cursor:pointer;transition:color .3s}
+.tabs button[aria-selected=true]{color:#fff}
+.menu-list{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
+.item{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:2px 14px;padding:18px 0;border-bottom:1px solid var(--line)}
+.item h3{font-family:Mitr,sans-serif;font-weight:500;font-size:19px}
+.item .pr{font-family:Mitr,sans-serif;font-weight:500;font-size:19px;color:var(--cobalt)}
+.item p{grid-column:1/2;color:var(--muted);font-size:15px}
+.add{grid-row:1/3;grid-column:3;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;position:relative;transition:background .2s,border-color .2s,transform .15s}
+.add:hover{border-color:var(--cobalt)}
+.add:active{transform:scale(.9)}
+.add svg{width:16px;height:16px;stroke:var(--cobalt);stroke-width:2.4;fill:none}
+.add.on{background:var(--cobalt);border-color:var(--cobalt)}.add.on svg{stroke:#fff}
+.add b{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--toast);color:var(--ink);font-size:12px;display:grid;place-items:center}
+.add b:empty{display:none}
+.tag{display:inline-block;font-family:Anuphan,sans-serif;font-size:12px;font-weight:600;background:#FCEFD2;color:#8A5B00;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:3px}
+
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.shopfront{aspect-ratio:4/3.4;max-width:100%;border-radius:16px;background:linear-gradient(180deg,#E9ECF4 0 18%,var(--cobalt) 18% 26%,#E9ECF4 26%);position:relative;overflow:hidden;border:1px solid var(--line)}
+.shopfront .sign{position:absolute;top:19%;left:0;right:0;text-align:center;color:#fff;font-family:Mitr,sans-serif;font-size:clamp(16px,2vw,22px);line-height:1}
+.shopfront .doors{position:absolute;left:8%;right:8%;bottom:0;top:34%;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.shopfront .doors span{background:repeating-linear-gradient(90deg,#C9CFDD 0 3px,#DDE1EA 3px 14px);border-radius:4px 4px 0 0}
+.shopfront .doors span:nth-child(2),.shopfront .doors span:nth-child(3){background:linear-gradient(180deg,#FFE7B0,#F2B33D)}
+.shopfront .cup{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);width:22%;aspect-ratio:1;border-radius:0 0 40% 40%;background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.story p{color:var(--muted);margin-top:16px}
+.story ul{margin-top:24px;list-style:none;display:grid;gap:12px}
+.story li{padding-left:28px;position:relative}
+.story li::before{content:"";position:absolute;left:0;top:.55em;width:14px;height:14px;border-radius:50%;background:var(--toast)}
+
+.visit{background:var(--cobalt);color:#fff;padding-bottom:120px}
+.visit h2.sec{color:#fff}
+.visit-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;margin-top:36px}
+.hours{width:100%;border-collapse:collapse;font-size:17px}
+.hours td{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.2)}
+.hours td:last-child{text-align:right;font-family:Mitr,sans-serif}
+.hours tr.today td{color:var(--toast)}
+.addr p{color:rgba(255,255,255,.82);margin-bottom:20px}
+.addr .row{display:flex;gap:10px;flex-wrap:wrap}
+.addr .btn-o{color:#fff}
+footer{background:var(--cobalt-deep);color:rgba(255,255,255,.6);font-size:14px;padding-block:22px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* order bar */
+.order{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;width:min(560px,calc(100% - 32px));transform:translate(-50%,140%);transition:transform .5s cubic-bezier(.2,1.1,.3,1);background:var(--ink);color:#fff;border-radius:18px;padding:12px 12px 12px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 24px 50px -20px rgba(0,0,0,.55)}
+.order.show{transform:translate(-50%,0)}
+.order .sum{flex:1;min-width:0}
+.order .sum b{font-family:Mitr,sans-serif;font-weight:500;font-size:20px;display:inline-block}
+.order .sum span{display:block;font-size:13px;color:rgba(255,255,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order .btn{background:#06C755;color:#fff;white-space:nowrap}
+.order .clear{background:none;border:0;color:rgba(255,255,255,.6);cursor:pointer;font-size:14px;padding:6px}
+.bump{animation:bump .35s ease}
+@keyframes bump{40%{transform:scale(1.18)}}
+
+@media (max-width:900px){
+  .wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  nav ul{display:none}
+  .logo{font-size:18px;gap:8px}
+  .hero{padding:32px 0 56px}
+  .hero-grid,.story-grid,.visit-grid,.menu-list{grid-template-columns:1fr}
+  .hero-grid{gap:36px}
+  .board{padding:28px 24px 24px}
+  .board li{font-size:17px}
+  section{padding:64px 0}
+  .facts{gap:20px}
+  .story-grid{gap:36px}
+  .tabs button{padding:8px 14px}
+  .order .clear{display:none}
+}
+@media (max-width:420px){.status .t{display:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header id="hdr"><div class="wrap"><nav>
+  <a class="logo" href="#top"><i>3</i>ซอยสาม คอฟฟี่บาร์</a>
+  <ul><li><a href="#menu">เมนู</a></li><li><a href="#story">เรื่องของร้าน</a></li><li><a href="#visit">เวลาเปิด–ที่ตั้ง</a></li></ul>
+  <span class="status" id="status"><i></i><span>เปิดอยู่</span><span class="t"></span></span>
+</nav></div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap hero-grid">
+  <div>
+    <h1>กาแฟดี ๆ<br>ในซอยที่คุณเดินผ่านทุกเช้า</h1>
+    <p class="lead">ร้านเล็กในตึกแถวเก่า คั่วเมล็ดเองทุกสัปดาห์ ขนมปังปิ้งเตาถ่านแบบที่บ้าน สั่งล่วงหน้าทาง LINE แล้วแวะรับได้เลย ไม่ต้องรอคิว</p>
+    <div class="cta">
+      <a class="btn btn-y" href="#menu">สั่งล่วงหน้า</a>
+      <a class="btn btn-o" href="#visit">เส้นทางมาร้าน</a>
+    </div>
+    <div class="facts">
+      <div><b>07:00</b><span>เปิดทุกวัน</span></div>
+      <div><b>12 ที่นั่ง</b><span>มีปลั๊กทุกโต๊ะ</span></div>
+      <div><b>200 ม.</b><span>จาก BTS อารีย์</span></div>
+    </div>
+  </div>
+  <div class="board" aria-label="เมนูแนะนำวันนี้">
+    <h2>เมนูหน้าร้าน</h2>
+    <div class="sub">เขียนใหม่ทุกเช้า</div>
+    <ul>
+      <li><span>ลาเต้นมสด<small>เมล็ดคั่วกลาง ดอยช้าง</small></span><span class="dots"></span><span class="p">65</span></li>
+      <li><span>อเมริกาโน่ส้มยูสุ</span><span class="dots"></span><span class="p">75</span></li>
+      <li><span>ชาไทยเย็น<small>ชงจากใบชา ไม่ใช้ผง</small></span><span class="dots"></span><span class="p">55</span></li>
+      <li><span>โกโก้เข้มข้น</span><span class="dots"></span><span class="p">60</span></li>
+      <li><span>ขนมปังปิ้งสังขยาใบเตย</span><span class="dots"></span><span class="p">45</span></li>
+      <li><span>ไข่กระทะซอยสาม</span><span class="dots"></span><span class="p">89</span></li>
+    </ul>
+    <p class="note">เพิ่มช็อต +15 · เปลี่ยนเป็นนมโอ๊ต +20</p>
+  </div>
+</div></section>
+
+<section class="menu" id="menu"><div class="wrap">
+  <h2 class="sec">เมนูทั้งหมด</h2>
+  <p class="sec-intro">กด + เพื่อเลือกเมนู แล้วส่งออเดอร์ทาง LINE ร้านจะยืนยันเวลารับให้ภายใน 5 นาที</p>
+  <div class="tabs" role="tablist" id="tabs"><span class="pill" id="pill"></span></div>
+  <div id="list" class="menu-list"></div>
+</div></section>
+
+<section id="story"><div class="wrap story-grid">
+  <div class="shopfront" role="img" aria-label="ภาพหน้าร้านตึกแถว">
+    <div class="sign">ซอยสาม คอฟฟี่บาร์</div>
+    <div class="doors"><span></span><span></span><span></span><span></span></div>
+    <div class="cup"></div>
+  </div>
+  <div class="story">
+    <h2 class="sec">ร้านกาแฟของคนในซอย</h2>
+    <p>เราเปิดร้านในตึกแถวที่อยู่มาสามรุ่น ตั้งใจให้เป็นที่แวะก่อนไปทำงาน นั่งทำงานได้ทั้งวัน หรือมานั่งคุยกับเพื่อนบ้านตอนเย็น</p>
+    <ul>
+      <li>คั่วเมล็ดเองทุกวันจันทร์ จากสวนในเชียงรายและน่าน</li>
+      <li>ขนมปังและสังขยาทำเองในร้าน ไม่ใช้วัตถุกันเสีย</li>
+      <li>นำแก้วมาเองลด 10 บาททุกแก้ว</li>
+    </ul>
+  </div>
+</div></section>
+
+<section class="visit" id="visit"><div class="wrap">
+  <h2 class="sec">แวะมาหากัน</h2>
+  <div class="visit-grid">
+    <table class="hours" aria-label="เวลาเปิดร้าน" id="hours">
+      <tr data-d="1-5"><td>จันทร์ – ศุกร์</td><td>07:00 – 18:00</td></tr>
+      <tr data-d="0,6"><td>เสาร์ – อาทิตย์</td><td>08:00 – 20:00</td></tr>
+      <tr><td>วันหยุดนักขัตฤกษ์</td><td>08:00 – 16:00</td></tr>
+    </table>
+    <div class="addr">
+      <p>12 ซอยพหลโยธิน 3 แขวงสามเสนใน เขตพญาไท กรุงเทพฯ<br>จอดรถได้ 2 คันหน้าร้าน · โทร 02 000 0000</p>
+      <div class="row">
+        <a class="btn btn-y" href="https://maps.google.com/?q=Phahonyothin+Soi+3" target="_blank" rel="noopener">เปิดใน Google Maps</a>
+        <a class="btn btn-o" href="#menu">สั่งล่วงหน้า</a>
+      </div>
+    </div>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© 2026 ซอยสาม คอฟฟี่บาร์</span><span>ตัวอย่างผลงานออกแบบเว็บไซต์ · ร้านสมมติ</span></div></footer>
+
+<div class="order" id="order" role="region" aria-label="ออเดอร์ของคุณ">
+  <div class="sum"><b id="total">฿0</b><span id="lines"></span></div>
+  <button class="clear" id="clear">ล้าง</button>
+  <a class="btn" id="send" href="#" target="_blank" rel="noopener">ส่งออเดอร์ทาง LINE</a>
+</div>
+
+<script>
+const MENU={
+  coffee:{name:'กาแฟ',items:[
+    ['เอสเปรสโซ่',50,'ช็อตคู่ รสช็อกโกแลตและคาราเมล'],
+    ['ลาเต้นมสด',65,'นมสดจากฟาร์มมวกเหล็ก ฟองเนียน','ขายดี'],
+    ['อเมริกาโน่ส้มยูสุ',75,'สดชื่น เปรี้ยวนิด ๆ เหมาะกับวันร้อน'],
+    ['ดอร์ตี้',80,'นมเย็นจัดราดด้วยเอสเปรสโซ่ร้อน'],
+    ['โคลด์บรูว์ 12 ชั่วโมง',85,'สกัดเย็น หวานธรรมชาติ ไม่ขม'],
+    ['มอคค่ามะพร้าว',85,'โกโก้จันทบุรี กับกะทิสด','ใหม่']]},
+  tea:{name:'ชาและอื่น ๆ',items:[
+    ['ชาไทยเย็น',55,'ชงจากใบชา หอมควันไม่ใส่สี'],
+    ['มัทฉะลาเต้',80,'มัทฉะเกรดพิธีจากอุจิ'],
+    ['โกโก้เข้มข้น',60,'โกโก้ 70% ไม่หวานเลี่ยน'],
+    ['น้ำส้มคั้นสด',65,'ส้มสายน้ำผึ้ง คั้นแก้วต่อแก้ว']]},
+  food:{name:'อาหารเช้า',items:[
+    ['ขนมปังปิ้งสังขยาใบเตย',45,'ปิ้งเตาถ่าน สังขยากวนเองทุกเช้า'],
+    ['ไข่กระทะซอยสาม',89,'ไข่ดาว กุนเชียง หมูยอ ขนมปังฝรั่งเศส','ขายดี'],
+    ['ครัวซองต์แฮมชีส',95,'อบใหม่ทุกสองชั่วโมง'],
+    ['โจ๊กหมูสับไข่ลวก',69,'มีถึง 10 โมงเช้าเท่านั้น']]}
+};
+const HOURS={0:[8,20],1:[7,18],2:[7,18],3:[7,18],4:[7,18],5:[7,18],6:[8,20]};
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const cart=new Map();
+const $=id=>document.getElementById(id);
+const baht=n=>'฿'+n.toLocaleString('th-TH');
+
+/* open-now status, Bangkok time */
+function bkkNow(){const d=window.__NOW?new Date(window.__NOW):new Date();const u=d.getTime()+d.getTimezoneOffset()*6e4;return new Date(u+7*36e5)}
+function updateStatus(){
+  const n=bkkNow(),day=n.getDay(),h=n.getHours()+n.getMinutes()/60,[o,c]=HOURS[day],el=$('status');
+  const open=h>=o&&h<c;el.classList.toggle('closed',!open);
+  el.children[1].textContent=open?'เปิดอยู่':'ปิดแล้ว';
+  el.children[2].textContent=open?` · ปิด ${String(c).padStart(2,'0')}:00`:` · เปิด ${String(HOURS[(day+(h>=c?1:0))%7][0]).padStart(2,'0')}:00`;
+  [...$('hours').rows].forEach(r=>{const d=r.dataset.d;r.classList.toggle('today',!!d&&(d==='1-5'?day>=1&&day<=5:d.split(',').includes(String(day))))});
+}
+updateStatus();setInterval(updateStatus,60000);
+
+/* tabs with sliding pill */
+const tabs=$('tabs'),pill=$('pill');let current='coffee';
+Object.entries(MENU).forEach(([k,v])=>{const b=document.createElement('button');b.role='tab';b.dataset.t=k;b.textContent=v.name;b.setAttribute('aria-selected',k===current);b.onclick=()=>show(k);tabs.appendChild(b)});
+function movePill(){const b=tabs.querySelector(`[data-t="${current}"]`);pill.style.width=b.offsetWidth+'px';pill.style.transform=`translateX(${b.offsetLeft}px)`}
+function show(k,first){
+  current=k;tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===k));movePill();
+  const list=$('list');
+  list.innerHTML=MENU[k].items.map(([n,p,d,tag],i)=>{const q=cart.get(n)?.q||0;return `<div class="item"><h3>${n}${tag?` <span class="tag">${tag}</span>`:''}</h3><span class="pr">${p}</span><p>${d}</p><button class="add${q?' on':''}" data-n="${n}" data-p="${p}" aria-label="เพิ่ม ${n}"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg><b>${q||''}</b></button></div>`}).join('');
+  if(!first&&!reduce)[...list.children].forEach((el,i)=>el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:420,delay:i*55,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'}));
+}
+$('list').addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const n=b.dataset.n,p=+b.dataset.p;const it=cart.get(n)||{p,q:0};it.q++;cart.set(n,it);b.classList.add('on');b.querySelector('b').textContent=it.q;if(!reduce)b.animate([{transform:'scale(.85)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:320});updateOrder()});
+function updateOrder(){
+  let total=0,count=0;const parts=[];cart.forEach((v,k)=>{total+=v.p*v.q;count+=v.q;parts.push(`${k} ×${v.q}`)});
+  $('order').classList.toggle('show',count>0);
+  const t=$('total');t.textContent=`${baht(total)} · ${count} รายการ`;t.classList.remove('bump');void t.offsetWidth;t.classList.add('bump');
+  $('lines').textContent=parts.join(', ');
+  const msg=`สั่งล่วงหน้า ซอยสาม คอฟฟี่บาร์\n${parts.join('\n')}\nรวม ${baht(total)}`;
+  $('send').href='https://line.me/R/msg/text/?'+encodeURIComponent(msg);
+}
+$('clear').onclick=()=>{cart.clear();updateOrder();show(current,true)};
+show('coffee',true);requestAnimationFrame(movePill);addEventListener('resize',movePill);
+document.fonts&&document.fonts.ready.then(movePill);
+
+/* header state + smooth anchor scroll */
+const hdr=$('hdr');addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>10),{passive:true});
+function tweenScroll(to,ms=900){if(reduce){scrollTo(0,to);return}const s=scrollY,t0=performance.now(),sp=window.__SPEED||1;
+  const f=t=>{const k=Math.min(1,(t-t0)*sp/ms),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,s+(to-s)*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.id==='send')return;const id=a.getAttribute('href').slice(1);const el=id==='top'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();tweenScroll(id==='top'?0:el.getBoundingClientRect().top+scrollY-70)});
+window.__tweenScroll=tweenScroll;
+</script>
+
+</body>
+</html>
