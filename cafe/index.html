@@ -139,7 +139,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 }
 @media (max-width:420px){.status .t{display:none}}
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
+  .board li,.status i{animation:none}
 }
 </style>
 </head>
@@ -276,9 +276,9 @@ function show(k,first){
   current=k;tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===k));movePill();
   const list=$('list');
   list.innerHTML=MENU[k].items.map(([n,p,d,tag],i)=>{const q=cart.get(n)?.q||0;return `<div class="item"><h3>${n}${tag?` <span class="tag">${tag}</span>`:''}</h3><span class="pr">${p}</span><p>${d}</p><button class="add${q?' on':''}" data-n="${n}" data-p="${p}" aria-label="เพิ่ม ${n}"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg><b>${q||''}</b></button></div>`}).join('');
-  if(!first&&!reduce)[...list.children].forEach((el,i)=>el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:420,delay:i*55,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'}));
+  if(!first)[...list.children].forEach((el,i)=>el.animate([{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'none'}],{duration:420,delay:i*55,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'}));
 }
-$('list').addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const n=b.dataset.n,p=+b.dataset.p;const it=cart.get(n)||{p,q:0};it.q++;cart.set(n,it);b.classList.add('on');b.querySelector('b').textContent=it.q;if(!reduce)b.animate([{transform:'scale(.85)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:320});updateOrder()});
+$('list').addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const n=b.dataset.n,p=+b.dataset.p;const it=cart.get(n)||{p,q:0};it.q++;cart.set(n,it);b.classList.add('on');b.querySelector('b').textContent=it.q;b.animate([{transform:'scale(.85)'},{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:320});updateOrder()});
 function updateOrder(){
   let total=0,count=0;const parts=[];cart.forEach((v,k)=>{total+=v.p*v.q;count+=v.q;parts.push(`${k} ×${v.q}`)});
   $('order').classList.toggle('show',count>0);
@@ -293,7 +293,7 @@ document.fonts&&document.fonts.ready.then(movePill);
 
 /* header state + smooth anchor scroll */
 const hdr=$('hdr');addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>10),{passive:true});
-function tweenScroll(to,ms=900){if(reduce){scrollTo(0,to);return}const s=scrollY,t0=performance.now(),sp=window.__SPEED||1;
+function tweenScroll(to,ms=900){if(reduce)ms=Math.min(ms,450);const s=scrollY,t0=performance.now(),sp=window.__SPEED||1;
   const f=t=>{const k=Math.min(1,(t-t0)*sp/ms),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,s+(to-s)*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a||a.id==='send')return;const id=a.getAttribute('href').slice(1);const el=id==='top'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();tweenScroll(id==='top'?0:el.getBoundingClientRect().top+scrollY-70)});
 window.__tweenScroll=tweenScroll;

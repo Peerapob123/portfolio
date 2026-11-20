@@ -97,7 +97,7 @@ tr:last-child td{border-bottom:0}
   #chart{height:220px}
   .hide-m{display:none}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -171,7 +171,7 @@ const PRODUCTS=[['โคมไฟตั้งโต๊ะไม้โอ๊ค',
 const $=id=>document.getElementById(id),reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const fmt=n=>Math.round(n).toLocaleString('th-TH'),baht=n=>'฿'+fmt(n);
 const sp=()=>window.__SPEED||1;
-function tween(ms,fn,done){if(reduce){fn(1);done&&done();return}const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)*sp()/ms);fn(1-Math.pow(1-k,3));if(k<1)requestAnimationFrame(f);else done&&done()};requestAnimationFrame(f)}
+function tween(ms,fn,done){const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)*sp()/ms);fn(1-Math.pow(1-k,3));if(k<1)requestAnimationFrame(f);else done&&done()};requestAnimationFrame(f)}
 const shown={};
 function countTo(id,val,f){const from=shown[id]??0;shown[id]=val;tween(900,k=>$(id).textContent=f(from+(val-from)*k))}
 
@@ -228,7 +228,7 @@ function render(){
   [...box.children].forEach((b,i)=>{b.setAttribute('aria-pressed',i===ch);b.querySelector('span b').textContent=baht(tot*sh[i]);b.querySelector('.pct').textContent=Math.round(sh[i]*100)+'%';const bar=b.querySelector('.bar b');requestAnimationFrame(()=>bar.style.width=sh[i]/sh[0]*100+'%')});
   const r=rng(99+mi*7);const rows=PRODUCTS.map(([n,p],i)=>{const q=Math.round((180-i*28)*(0.85+r()*.3)*(1+mi*.08)*mc);return{n,q,v:q*p,i}}).sort((a,b)=>b.v-a.v);const topv=rows[0].v;
   $('top').innerHTML=rows.map((o,k)=>`<tr><td><div class="prod"><i>${k+1}</i>${o.n}${(o.i===3&&mi===2)?'<span class="stock">เหลือ 6 ชิ้น</span>':''}</div></td><td class="r hide-m">${fmt(o.q)}</td><td class="r"><span class="mini hide-m" style="width:${Math.round(o.v/topv*60)}px"></span>${baht(o.v)}</td></tr>`).join('');
-  if(!reduce)[...$('top').children].forEach((tr,i)=>tr.animate([{opacity:0,transform:'translateX(-8px)'},{opacity:1,transform:'none'}],{duration:380,delay:i*60,easing:'ease-out',fill:'backwards'}));
+  [...$('top').children].forEach((tr,i)=>tr.animate([{opacity:0,transform:'translateX(-8px)'},{opacity:1,transform:'none'}],{duration:380,delay:i*60,easing:'ease-out',fill:'backwards'}));
   const goal=m.goal*mc,pct=Math.min(1,sales/goal),fromPct=shown.pct??0;shown.pct=pct;
   tween(1000,k=>{const p=fromPct+(pct-fromPct)*k;$('ring').setAttribute('stroke-dashoffset',314.16*(1-p));$('ring-t').textContent=Math.round(p*100)+'%'});
   $('goal-t').innerHTML=`ทำได้ <b>${baht(sales)}</b> จากเป้า ${baht(goal)}`;

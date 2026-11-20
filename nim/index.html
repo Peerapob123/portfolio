@@ -159,7 +159,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
   .layers,.faq-grid{gap:36px}
   .layer:nth-child(2){margin:0 10px}.layer:nth-child(3){margin:0 20px}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){.pillow,.shadow{animation:none}}
 </style>
 </head>
 <body>
@@ -273,7 +273,7 @@ function pick(id,first){
   picker.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));movePill();
   $('pw').style.transform=`scale(${s.scale})`;$('shadow').style.transform=`scaleX(${s.scale})`;
   $('heroPrice').innerHTML=baht(s.price)+(s.was?`<s>${baht(s.was)}</s>`:'');$('dimTag').textContent=`${s.short} · ${s.dim}`;
-  if(!first&&!reduce){$('pillow').animate([{transform:'scale(1)'},{transform:'scale(1.06,.92)',offset:.3},{transform:'scale(.98,1.03)',offset:.65},{transform:'scale(1)'}],{duration:650,easing:'ease-out'});
+  if(!first){$('pillow').animate([{transform:'scale(1)'},{transform:'scale(1.06,.92)',offset:.3},{transform:'scale(.98,1.03)',offset:.65},{transform:'scale(1)'}],{duration:650,easing:'ease-out'});
     $('heroPrice').animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:350,easing:'ease-out'})}
 }
 pick('std',true);requestAnimationFrame(movePill);document.fonts&&document.fonts.ready.then(movePill);addEventListener('resize',movePill);
@@ -290,7 +290,7 @@ $('sizeGrid').addEventListener('click',e=>{const b=e.target.closest('[data-add]'
 function add(id,from){
   cart.set(id,(cart.get(id)||0)+1);renderCart();
   const c=$('count');c.classList.remove('bump');void c.offsetWidth;c.classList.add('bump');
-  if(from&&!reduce){const r=from.getBoundingClientRect(),t=$('cartBtn').getBoundingClientRect(),dot=document.createElement('div');
+  if(from){const r=from.getBoundingClientRect(),t=$('cartBtn').getBoundingClientRect(),dot=document.createElement('div');
     dot.style.cssText=`position:fixed;z-index:60;left:${r.left+r.width/2-14}px;top:${r.top+r.height/2-10}px;width:28px;height:20px;border-radius:40%/50%;background:#ECEAF6;border:1.5px solid #5B5596;pointer-events:none`;
     document.body.appendChild(dot);const dx=t.left+t.width/2-(r.left+r.width/2),dy=t.top+t.height/2-(r.top+r.height/2);
     dot.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${dx*.5}px,${dy*.5-80}px) scale(1.2)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(.4)`,opacity:.6}],{duration:700,easing:'cubic-bezier(.5,0,.6,1)'}).onfinish=()=>dot.remove()}
@@ -312,13 +312,13 @@ let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('sho
 renderCart();
 
 /* smooth FAQ */
-document.querySelectorAll('#faqList details').forEach(d=>{const s=d.querySelector('summary');s.addEventListener('click',e=>{if(reduce)return;e.preventDefault();
+document.querySelectorAll('#faqList details').forEach(d=>{const s=d.querySelector('summary');s.addEventListener('click',e=>{e.preventDefault();
   const start=d.offsetHeight;if(d.open){const end=s.offsetHeight;d.animate([{height:start+'px'},{height:end+'px'}],{duration:320,easing:'ease'}).onfinish=()=>d.open=false}
   else{d.open=true;const end=d.offsetHeight;d.animate([{height:start+'px'},{height:end+'px'}],{duration:380,easing:'cubic-bezier(.2,.8,.2,1)'})}})});
 
 /* header + anchors */
 const hdr=$('hdr');addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>20),{passive:true});
-function tweenScroll(to,ms=900){if(reduce){scrollTo(0,to);return}const s=scrollY,t0=performance.now(),sp=window.__SPEED||1;
+function tweenScroll(to,ms=900){if(reduce)ms=Math.min(ms,450);const s=scrollY,t0=performance.now(),sp=window.__SPEED||1;
   const f=t=>{const k=Math.min(1,(t-t0)*sp/ms),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;scrollTo(0,s+(to-s)*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1);const el=document.getElementById(id);if(!el)return;e.preventDefault();tweenScroll(id==='top'?0:el.getBoundingClientRect().top+scrollY-60)});
 window.__tweenScroll=tweenScroll;
